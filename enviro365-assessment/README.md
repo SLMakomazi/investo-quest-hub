@@ -61,12 +61,20 @@ Frontend runs on http://localhost:5173
 
 To switch between different investors in the frontend:
 
+**Option 1: Using the Navbar Dropdown**
+- Use the investor dropdown in the navbar to select a different investor
+- The dropdown shows all available investors with their names and ages
+- Color indicator shows the current investor's assigned color
+
+**Option 2: Manual Configuration**
 1. Open frontend/src/App.jsx
-2. Change the CURRENT_INVESTOR_ID value (line 8)
+2. Change the currentInvestorId initial value (line 8)
 3. Available investor IDs from data.sql:
    - ID 1: Thabo Mokoena (age 70) - Can withdraw from retirement products
    - ID 2: Aisha Patel (age 45) - Cannot withdraw from retirement products
    - ID 3: Sipho Dlamini (age 30) - Cannot withdraw from retirement products
+   - ID 4: Siseko Makomazi (age 25) - Cannot withdraw from retirement products
+   - ID 5: Nomsa Ngubane (age 35) - Cannot withdraw from retirement products
 
 To modify investor data in the backend:
 
