@@ -1,20 +1,27 @@
 import { useEffect, useState } from 'react';
 import { getPortfolio } from '../../services/apiService.js';
-import { CURRENT_INVESTOR_ID } from '../../App.jsx';
 import PortfolioCard from '../../components/PortfolioCard/PortfolioCard.jsx';
 import './Dashboard.css';
 
-export default function Dashboard() {
+/**
+ * Dashboard page component.
+ * Displays investor information, portfolio details, and all investment products.
+ * Calculates and shows total portfolio balance.
+ * Accepts currentInvestorId prop to support investor switching.
+ */
+export default function Dashboard({ currentInvestorId }) {
   const [portfolio, setPortfolio] = useState(null);
   const [error, setError] = useState(null);
 
+  // Load portfolio data on component mount and when investor changes
   useEffect(() => {
-    getPortfolio(CURRENT_INVESTOR_ID).then(setPortfolio).catch(e => setError(e.message));
-  }, []);
+    getPortfolio(currentInvestorId).then(setPortfolio).catch(e => setError(e.message));
+  }, [currentInvestorId]);
 
   if (error) return <p className="error">{error}</p>;
   if (!portfolio) return <p>Loading…</p>;
 
+  // Calculate total balance across all products
   const total = portfolio.products.reduce((s, p) => s + Number(p.balance), 0);
 
   return (
