@@ -1,0 +1,10 @@
+.portfolio-card {
+  background: #fff; border-radius: 10px; padding: 18px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+.pc-header { display: flex; justify-content: space-between; align-items: center; }
+.pc-header h3 { margin: 0; font-size: 1rem; }
+.pc-tag { font-size: 0.7rem; padding: 2px 8px; border-radius: 12px; }
+.pc-tag.retirement { background: #fef3c7; color: #92400e; }
+.pc-tag.savings    { background: #dcfce7; color: #166534; }
+.pc-balance { margin-top: 12px; font-size: 1.4rem; font-weight: 700; color: #0b3d2e; }

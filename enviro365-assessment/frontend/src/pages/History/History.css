@@ -1,0 +1,7 @@
+.history-page h1 { color: #0b3d2e; }
+.history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.csv-btn {
+  background: #0b3d2e; color: #fff; padding: 10px 16px; border-radius: 6px;
+  font-weight: 600; font-size: 0.9rem;
+}
+.csv-btn:hover { background: #115e43; }

@@ -1,0 +1,5 @@
+.dashboard header { margin-bottom: 24px; }
+.dashboard h1 { margin: 0 0 4px; color: #0b3d2e; }
+.dashboard .total { margin-top: 12px; font-size: 1.2rem; font-weight: 700; color: #0b3d2e; }
+.product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+.error { color: #991b1b; }
