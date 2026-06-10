@@ -1,0 +1,10 @@
+.navbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 28px; background: #0b3d2e; color: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+}
+.navbar-brand { font-weight: 700; font-size: 1.1rem; }
+.navbar-links a {
+  color: #d1fae5; margin-left: 18px; font-weight: 500;
+}
+.navbar-links a.active { color: #fff; border-bottom: 2px solid #fff; padding-bottom: 2px; }
