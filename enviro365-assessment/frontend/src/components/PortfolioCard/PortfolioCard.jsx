@@ -1,5 +1,9 @@
 import './PortfolioCard.css';
 
+/**
+ * Portfolio card component for displaying individual investment products.
+ * Shows product name, type (RETIREMENT/SAVINGS), and current balance.
+ */
 export default function PortfolioCard({ product }) {
   return (
     <div className="portfolio-card">

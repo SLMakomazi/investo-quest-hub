@@ -1,11 +1,12 @@
-package com.enviro.assessment.junior.yourname;
+package com.enviro.assessment.junior.siseko_makomazi;
 
-import com.enviro.assessment.junior.yourname.exception.AgeRestrictionException;
-import com.enviro.assessment.junior.yourname.exception.InsufficientBalanceException;
-import com.enviro.assessment.junior.yourname.model.Investor;
-import com.enviro.assessment.junior.yourname.model.Product;
-import com.enviro.assessment.junior.yourname.validation.WithdrawalValidator;
 import org.junit.jupiter.api.Test;
+
+import com.enviro.assessment.junior.siseko_makomazi.exception.AgeRestrictionException;
+import com.enviro.assessment.junior.siseko_makomazi.exception.InsufficientBalanceException;
+import com.enviro.assessment.junior.siseko_makomazi.model.Investor;
+import com.enviro.assessment.junior.siseko_makomazi.model.Product;
+import com.enviro.assessment.junior.siseko_makomazi.validation.WithdrawalValidator;
 
 import java.math.BigDecimal;
 

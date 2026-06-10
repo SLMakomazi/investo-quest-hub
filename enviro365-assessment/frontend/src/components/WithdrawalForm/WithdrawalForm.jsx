@@ -3,6 +3,12 @@ import { submitWithdrawal } from '../../services/apiService.js';
 import { validateWithdrawal } from '../../utils/validators.js';
 import './WithdrawalForm.css';
 
+/**
+ * Withdrawal form component.
+ * Allows users to select a product and enter a withdrawal amount.
+ * Performs client-side validation before submitting to backend.
+ * Displays success/error messages and updates parent on success.
+ */
 export default function WithdrawalForm({ investor, products, onSuccess }) {
   const [productId, setProductId] = useState(products[0]?.id ?? '');
   const [amount, setAmount] = useState('');
@@ -16,6 +22,7 @@ export default function WithdrawalForm({ investor, products, onSuccess }) {
     e.preventDefault();
     setError(null); setMsg(null);
 
+    // Perform client-side validation first
     const clientError = validateWithdrawal({ investor, product, amount });
     if (clientError) { setError(clientError); return; }
 
@@ -28,7 +35,7 @@ export default function WithdrawalForm({ investor, products, onSuccess }) {
       });
       setMsg(`Success. New balance: R ${Number(result.remainingBalance).toLocaleString()}`);
       setAmount('');
-      onSuccess?.();
+      onSuccess?.();  // Notify parent to reload data
     } catch (err) {
       setError(err.response?.data?.message ?? 'Request failed.');
     } finally {

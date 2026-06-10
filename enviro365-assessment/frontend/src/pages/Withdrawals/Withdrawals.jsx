@@ -1,14 +1,20 @@
 import { useEffect, useState } from 'react';
 import { getPortfolio } from '../../services/apiService.js';
-import { CURRENT_INVESTOR_ID } from '../../App.jsx';
 import WithdrawalForm from '../../components/WithdrawalForm/WithdrawalForm.jsx';
 import './Withdrawals.css';
 
-export default function Withdrawals() {
+/**
+ * Withdrawal submission page.
+ * Loads portfolio data and renders the withdrawal form.
+ * Reloads portfolio data after successful withdrawal to update balances.
+ * Accepts currentInvestorId prop to support investor switching.
+ */
+export default function Withdrawals({ currentInvestorId }) {
   const [portfolio, setPortfolio] = useState(null);
 
-  const load = () => getPortfolio(CURRENT_INVESTOR_ID).then(setPortfolio);
-  useEffect(() => { load(); }, []);
+  // Load portfolio data on component mount and when investor changes
+  const load = () => getPortfolio(currentInvestorId).then(setPortfolio);
+  useEffect(() => { load(); }, [currentInvestorId]);
 
   if (!portfolio) return <p>Loading…</p>;
 
@@ -19,7 +25,7 @@ export default function Withdrawals() {
       <WithdrawalForm
         investor={portfolio.investor}
         products={portfolio.products}
-        onSuccess={load}
+        onSuccess={load}  // Reload portfolio after successful withdrawal
       />
     </div>
   );

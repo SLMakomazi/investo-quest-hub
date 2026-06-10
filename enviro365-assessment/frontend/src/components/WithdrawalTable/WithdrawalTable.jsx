@@ -1,5 +1,9 @@
 import './WithdrawalTable.css';
 
+/**
+ * Table component for displaying withdrawal history.
+ * Shows date, product name, product type, and withdrawal amount.
+ */
 export default function WithdrawalTable({ items }) {
   if (!items?.length) return <p>No withdrawals yet.</p>;
   return (
