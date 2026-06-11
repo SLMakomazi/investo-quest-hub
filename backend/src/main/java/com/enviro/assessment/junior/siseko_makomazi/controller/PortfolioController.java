@@ -12,9 +12,11 @@ import com.enviro.assessment.junior.siseko_makomazi.service.PortfolioService;
 @RestController
 @RequestMapping("/api/portfolios")
 public class PortfolioController {
+    // service is declared here and assigned through constructor injection.
+    // The controller uses it to fetch portfolio data instead of calling the repository directly.
     private final PortfolioService service;
     
-    // Constructor injection of PortfolioService
+    // s is declared as a constructor parameter; Spring passes in PortfolioService automatically.
     public PortfolioController(PortfolioService s) { this.service = s; }
 
     /**
@@ -25,6 +27,8 @@ public class PortfolioController {
      */
     @GetMapping("/investor/{investorId}")
     public Portfolio byInvestor(@PathVariable Long investorId) {
+        // investorId is declared from the URL path.
+        // It identifies which investor's portfolio should be returned to the UI.
         return service.getByInvestorId(investorId);
     }
 }

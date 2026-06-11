@@ -25,6 +25,8 @@ public class GlobalExceptionHandler {
      * @return Map containing timestamp, status, error type, and message
      */
     private Map<String, Object> body(HttpStatus status, String message) {
+        // status and message are declared as method parameters by each exception handler.
+        // m is declared here as the JSON response body sent back to the frontend.
         Map<String, Object> m = new HashMap<>();
         m.put("timestamp", LocalDateTime.now());
         m.put("status", status.value());
@@ -39,6 +41,8 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(AgeRestrictionException.class)
     public ResponseEntity<?> handleAge(AgeRestrictionException ex) {
+        // ex is declared by Spring when an AgeRestrictionException is thrown.
+        // 403 is used because the investor is not allowed to perform this retirement withdrawal.
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(body(HttpStatus.FORBIDDEN, ex.getMessage()));
     }
 
@@ -48,6 +52,8 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(InsufficientBalanceException.class)
     public ResponseEntity<?> handleBalance(InsufficientBalanceException ex) {
+        // ex contains the balance or 90% rule error message.
+        // 400 is used because the submitted request amount is invalid for the product.
         return ResponseEntity.badRequest().body(body(HttpStatus.BAD_REQUEST, ex.getMessage()));
     }
 
@@ -57,6 +63,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<?> handleNotFound(ResourceNotFoundException ex) {
+        // ex contains which missing resource was requested, such as investor or product.
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body(HttpStatus.NOT_FOUND, ex.getMessage()));
     }
 
@@ -66,6 +73,8 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleValidation(MethodArgumentNotValidException ex) {
+        // ex contains validation errors created by annotations like @NotNull and @Positive.
+        // msg is declared here by combining all field errors into one readable response.
         String msg = ex.getBindingResult().getFieldErrors().stream()
                 .map(e -> e.getField() + ": " + e.getDefaultMessage())
                 .reduce((a, b) -> a + "; " + b).orElse("Validation failed");
@@ -78,6 +87,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleGeneric(Exception ex) {
+        // This fallback if no specific handler matched prevents raw stack traces from reaching the UI.
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(body(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage()));
     }

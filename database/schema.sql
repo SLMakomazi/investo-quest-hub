@@ -31,7 +31,9 @@ CREATE TABLE withdrawal (
     investor_id  BIGINT NOT NULL REFERENCES investor(id),
     product_id   BIGINT NOT NULL REFERENCES product(id),
     amount       NUMERIC(18,2) NOT NULL CHECK (amount > 0),
-    created_at   TIMESTAMP NOT NULL DEFAULT NOW()
+    created_at   TIMESTAMP NOT NULL DEFAULT NOW(),
+    status       VARCHAR(50) NOT NULL DEFAULT 'APPROVED',
+    rejection_reason TEXT
 );
 
 CREATE INDEX idx_withdrawal_investor ON withdrawal(investor_id);
