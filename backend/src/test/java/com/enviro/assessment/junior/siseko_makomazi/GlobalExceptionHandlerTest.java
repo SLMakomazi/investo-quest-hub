@@ -3,7 +3,7 @@ package com.enviro.assessment.junior.siseko_makomazi;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+
 
 import com.enviro.assessment.junior.siseko_makomazi.exception.AgeRestrictionException;
 import com.enviro.assessment.junior.siseko_makomazi.exception.GlobalExceptionHandler;
@@ -119,6 +119,7 @@ class GlobalExceptionHandlerTest {
         Map<String, Object> body = (Map<String, Object>) response.getBody();
         
         // Verify all required fields are present
+        assertNotNull(body);
         assertTrue(body.containsKey("timestamp"));
         assertTrue(body.containsKey("status"));
         assertTrue(body.containsKey("error"));
