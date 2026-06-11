@@ -48,6 +48,18 @@
         <artifactId>spring-boot-starter-validation</artifactId>
     </dependency>
 
+    <!-- Monitoring: exposes Actuator endpoints such as /actuator/prometheus -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+
+    <!-- Monitoring: formats Micrometer metrics for Prometheus scraping/browser viewing -->
+    <dependency>
+        <groupId>io.micrometer</groupId>
+        <artifactId>micrometer-registry-prometheus</artifactId>
+    </dependency>
+
     <!-- H2 Database (required by assessment) -->
     <dependency>
         <groupId>com.h2database</groupId>

@@ -1,0 +1,37 @@
+# Global settings apply to every scrape job unless a job overrides them.
+global:
+  # Prometheus will collect metrics from configured targets every 5 seconds.
+  scrape_interval: 5s
+
+  # Prometheus will wait up to 5 seconds for a target to respond before marking the scrape as failed.
+  scrape_timeout: 5s
+
+  # Prometheus will evaluate alerting or recording rules every 15 seconds if rule files are added later.
+  evaluation_interval: 15s
+
+# scrape_configs declares the applications or services Prometheus should monitor.
+scrape_configs:
+  # job_name is the friendly name Prometheus uses for your Spring Boot backend metrics target.
+  - job_name: "enviro365-backend"
+
+    # metrics_path tells Prometheus which HTTP endpoint contains the metrics text.
+    metrics_path: "/actuator/prometheus"
+
+    # scheme tells Prometheus to call the backend over normal HTTP during local development.
+    scheme: "http"
+
+    # static_configs is used when the target address is known and does not need service discovery.
+    static_configs:
+      # targets lists the backend host and port that Prometheus should scrape.
+      # localhost:8080 is used because Prometheus will run directly on this machine, not in Docker.
+      - targets: ["localhost:8080"]
+
+        # labels adds custom metadata to all metrics scraped from this target.
+        labels:
+          # application identifies these metrics as belonging to the Enviro365 backend.
+          application: "enviro365-backend"
+
+          # environment identifies this scrape target as the local development environment.
+          environment: "local"
+
+# This file is configured for a local Prometheus installation running directly on this machine.
