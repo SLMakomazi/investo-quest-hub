@@ -12,9 +12,11 @@ import com.enviro.assessment.junior.siseko_makomazi.repository.PortfolioReposito
  */
 @Service
 public class PortfolioService {
+    // repo is declared here as the PortfolioRepository dependency for database queries.
+    // The service uses it to retrieve portfolio rows and related product data.
     private final PortfolioRepository repo;
     
-    // Constructor injection of PortfolioRepository
+    // repo is declared as a constructor parameter; Spring injects it automatically.
     public PortfolioService(PortfolioRepository repo) { this.repo = repo; }
 
     /**
@@ -24,6 +26,8 @@ public class PortfolioService {
      * @throws ResourceNotFoundException if portfolio not found
      */
     public Portfolio getByInvestorId(Long investorId) {
+        // investorId is declared as the method parameter and comes from the API path.
+        // If no portfolio exists, the custom exception is handled by GlobalExceptionHandler.
         return repo.findByInvestorId(investorId).orElseThrow(
             () -> new ResourceNotFoundException("Portfolio not found for investor: " + investorId));
     }

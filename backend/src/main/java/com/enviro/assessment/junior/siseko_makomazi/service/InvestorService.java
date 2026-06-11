@@ -12,9 +12,11 @@ import com.enviro.assessment.junior.siseko_makomazi.repository.InvestorRepositor
  */
 @Service
 public class InvestorService {
+    // repo is declared here as the InvestorRepository dependency for database access.
+    // It is final because the service should use the same repository instance after construction.
     private final InvestorRepository repo;
     
-    // Constructor injection of InvestorRepository
+    // repo is declared as a constructor parameter; Spring injects the repository bean.
     public InvestorService(InvestorRepository repo) { this.repo = repo; }
 
     /**
@@ -24,6 +26,8 @@ public class InvestorService {
      * @throws ResourceNotFoundException if investor not found
      */
     public Investor getById(Long id) {
+        // id is declared as the method parameter and contains the investor primary key.
+        // orElseThrow is used so missing investors become a controlled 404 error.
         return repo.findById(id).orElseThrow(
             () -> new ResourceNotFoundException("Investor not found: " + id));
     }

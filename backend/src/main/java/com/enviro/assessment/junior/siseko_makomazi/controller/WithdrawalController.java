@@ -21,9 +21,11 @@ import java.util.List;
 @RequestMapping("/api/withdrawals")
 public class WithdrawalController {
 
+    // service is declared as a final field and assigned in the constructor.
+    // It contains the actual withdrawal validation, saving, and history logic.
     private final WithdrawalService service;
     
-    // Constructor injection of WithdrawalService
+    // s is declared as a constructor parameter; Spring injects WithdrawalService here.
     public WithdrawalController(WithdrawalService s) { this.service = s; }
 
     /**
@@ -34,6 +36,8 @@ public class WithdrawalController {
      */
     @PostMapping
     public WithdrawalResponseDTO create(@Valid @RequestBody WithdrawalRequestDTO req) {
+        // req is declared as the request body parameter.
+        // @Valid tells Spring to check required fields before this method continues.
         return service.create(req);
     }
 
@@ -45,6 +49,7 @@ public class WithdrawalController {
      */
     @GetMapping("/investor/{investorId}")
     public List<Withdrawal> history(@PathVariable Long investorId) {
+        // investorId is declared from the URL path and is used to filter history records.
         return service.history(investorId);
     }
 
@@ -57,23 +62,26 @@ public class WithdrawalController {
      */
     @GetMapping("/export")
     public void export(@RequestParam Long investorId, HttpServletResponse response) throws IOException {
-        // Set response headers for CSV download
+        // investorId is declared as a query parameter, for example ?investorId=1.
+        // response is declared by Spring and lets us write the CSV directly to the HTTP response.
         response.setContentType("text/csv");
         response.setHeader("Content-Disposition",
             "attachment; filename=\"withdrawals-" + investorId + ".csv\"");
         
-        // Write CSV header with status and rejection reason columns
+        // w is declared here as the writer used to send CSV text back to the browser.
         PrintWriter w = response.getWriter();
         w.println("id,createdAt,productId,productName,amount,status,rejectionReason");
         
-        // Write withdrawal data rows including status and rejection reason
+        // x is declared inside the loop and represents one withdrawal history row.
         for (Withdrawal x : service.history(investorId)) {
             w.printf("%d,%s,%d,%s,%s,%s,%s%n",
                 x.getId(), x.getCreatedAt(),
                 x.getProduct().getId(), x.getProduct().getName(),
                 x.getAmount(), x.getStatus(), 
+                // If rejectionReason is null, write an empty CSV value so approved rows stay clean.
                 x.getRejectionReason() != null ? x.getRejectionReason() : "");
         }
+        // flush forces any buffered CSV content to be sent before the method ends.
         w.flush();
     }
 }

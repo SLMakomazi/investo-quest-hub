@@ -5,5 +5,6 @@ package com.enviro.assessment.junior.siseko_makomazi.exception;
  * cannot be found in the database.
  */
 public class ResourceNotFoundException extends RuntimeException {
+    // message is declared as a constructor parameter and names the missing database record.
     public ResourceNotFoundException(String message) { super(message); }
 }

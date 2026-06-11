@@ -10,6 +10,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class AssessmentApplication {
     public static void main(String[] args) {
+        // args is declared by the JVM when the application starts.
+        // SpringApplication.run boots the embedded server, loads beans, and starts the REST API.
         SpringApplication.run(AssessmentApplication.class, args);
     }
 }
