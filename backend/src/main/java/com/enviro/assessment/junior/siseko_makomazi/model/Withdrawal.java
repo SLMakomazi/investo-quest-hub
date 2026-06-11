@@ -6,8 +6,8 @@ import java.time.LocalDateTime;
 
 /**
  * Represents a withdrawal request made by an investor from a specific product.
- * Records the amount withdrawn, the investor, product, and timestamp.
- * Used for withdrawal history and CSV export functionality.
+ * Records the amount withdrawn, the investor, product, timestamp, and status.
+ * Used for withdrawal history, audit trail, and CSV export functionality.
  */
 @Entity
 public class Withdrawal {
@@ -30,6 +30,10 @@ public class Withdrawal {
     // Timestamp of when the withdrawal was created (auto-set on creation)
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    // Withdrawal status: APPROVED, REJECTED, or PENDING
+    // Default is APPROVED since only successful withdrawals are saved
+    private String status = "APPROVED";
+
     // Getters and setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -45,4 +49,7 @@ public class Withdrawal {
     
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime t) { this.createdAt = t; }
+    
+    public String getStatus() { return status; }
+    public void setStatus(String s) { this.status = s; }
 }

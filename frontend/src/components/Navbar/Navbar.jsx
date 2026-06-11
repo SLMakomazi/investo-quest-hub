@@ -9,12 +9,13 @@ import './Navbar.css';
  */
 export default function Navbar({ currentInvestorId, onInvestorChange }) {
   // Available investors with their IDs, names, and colors for the dropdown
+  // Using realistic financial colors (blues, greens, grays)
   const investors = [
-    { id: 1, name: 'Thabo Mokoena', age: 70, color: '#4CAF50' },
-    { id: 2, name: 'Aisha Patel', age: 45, color: '#2196F3' },
-    { id: 3, name: 'Sipho Dlamini', age: 30, color: '#FF9800' },
-    { id: 4, name: 'Siseko Makomazi', age: 25, color: '#9C27B0' },
-    { id: 5, name: 'Nomsa Ngubane', age: 35, color: '#E91E63' }
+    { id: 1, name: 'Thabo Mokoena', age: 70, color: '#1E88E5' },  // Professional Blue
+    { id: 2, name: 'Aisha Patel', age: 45, color: '#43A047' },   // Growth Green
+    { id: 3, name: 'Sipho Dlamini', age: 30, color: '#5E35B1' }, // Deep Purple
+    { id: 4, name: 'Siseko Makomazi', age: 25, color: '#00897B' }, // Teal
+    { id: 5, name: 'Nomsa Ngubane', age: 35, color: '#F4511E' }   // Burnt Orange
   ];
 
   const currentInvestor = investors.find(i => i.id === currentInvestorId);

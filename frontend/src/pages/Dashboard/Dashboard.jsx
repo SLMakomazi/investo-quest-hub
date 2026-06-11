@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 import { getPortfolio } from '../../services/apiService.js';
 import PortfolioCard from '../../components/PortfolioCard/PortfolioCard.jsx';
+import PortfolioAnalytics from '../../components/PortfolioAnalytics/PortfolioAnalytics.jsx';
 import './Dashboard.css';
 
 /**
  * Dashboard page component.
  * Displays investor information, portfolio details, and all investment products.
  * Calculates and shows total portfolio balance.
+ * Includes portfolio analytics dashboard with key metrics.
  * Accepts currentInvestorId prop to support investor switching.
  */
 export default function Dashboard({ currentInvestorId }) {
@@ -31,6 +33,9 @@ export default function Dashboard({ currentInvestorId }) {
         <p>Age: {portfolio.investor.age} · Portfolio: {portfolio.name}</p>
         <div className="total">Total balance: R {total.toLocaleString()}</div>
       </header>
+
+      {/* Portfolio Analytics Dashboard */}
+      <PortfolioAnalytics portfolio={portfolio} />
 
       <h2>Products</h2>
       <div className="product-grid">
