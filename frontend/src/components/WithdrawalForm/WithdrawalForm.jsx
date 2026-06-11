@@ -36,9 +36,15 @@ export default function WithdrawalForm({ investor, products, onSuccess }) {
         productId: Number(productId),
         amount: Number(amount)
       });
-      setMsg(`Success. New balance: R ${Number(result.remainingBalance).toLocaleString()}`);
-      setAmount('');
-      onSuccess?.();  // Notify parent to reload data
+
+      if (result.status === 'REJECTED') {
+        setError(`Rejected: ${result.rejectionReason}`);
+      } else {
+        setMsg(`Approved. New balance: R ${Number(result.remainingBalance).toLocaleString()}`);
+        setAmount('');
+      }
+
+      onSuccess?.();  // Notify parent to reload data/history
     } catch (err) {
       setError(err.response?.data?.message ?? 'Request failed.');
     } finally {

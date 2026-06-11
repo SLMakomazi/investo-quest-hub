@@ -5,8 +5,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.enviro.assessment.junior.siseko_makomazi.dto.WithdrawalRequestDTO;
 import com.enviro.assessment.junior.siseko_makomazi.dto.WithdrawalResponseDTO;
-import com.enviro.assessment.junior.siseko_makomazi.exception.AgeRestrictionException;
-import com.enviro.assessment.junior.siseko_makomazi.exception.InsufficientBalanceException;
 import com.enviro.assessment.junior.siseko_makomazi.exception.ResourceNotFoundException;
 import com.enviro.assessment.junior.siseko_makomazi.model.*;
 import com.enviro.assessment.junior.siseko_makomazi.repository.*;
@@ -40,8 +38,6 @@ public class WithdrawalService {
      * @param req The withdrawal request with investor ID, product ID, and amount
      * @return WithdrawalResponseDTO with withdrawal details and remaining balance
      * @throws ResourceNotFoundException if investor or product not found
-     * @throws AgeRestrictionException if investor too young for retirement withdrawal
-     * @throws InsufficientBalanceException if amount exceeds balance or 90% limit
      */
     @Transactional
     public WithdrawalResponseDTO create(WithdrawalRequestDTO req) {
@@ -51,47 +47,26 @@ public class WithdrawalService {
         Product product = productRepo.findById(req.productId).orElseThrow(
             () -> new ResourceNotFoundException("Product not found: " + req.productId));
 
-        String rejectionReason = null;
-
-        try {
-            // Validate withdrawal against business rules (age, balance, 90% limit)
-            validator.validate(investor, product, req.amount);
-
-            // Update product balance by subtracting withdrawal amount
-            product.setBalance(product.getBalance().subtract(req.amount));
-            productRepo.save(product);
-
-            // Create and save withdrawal record as APPROVED
-            Withdrawal w = new Withdrawal();
-            w.setInvestor(investor);
-            w.setProduct(product);
-            w.setAmount(req.amount);
-            w.setStatus("APPROVED");
-            Withdrawal saved = withdrawalRepo.save(w);
-
-            // Build response DTO with withdrawal details
-            WithdrawalResponseDTO out = new WithdrawalResponseDTO();
-            out.id = saved.getId();
-            out.investorId = investor.getId();
-            out.productId = product.getId();
-            out.productName = product.getName();
-            out.amount = saved.getAmount();
-            out.remainingBalance = product.getBalance();
-            out.createdAt = saved.getCreatedAt();
-            return out;
-
-        } catch (AgeRestrictionException e) {
-            // Save rejected withdrawal for audit trail
-            rejectionReason = e.getMessage();
-            saveRejectedWithdrawal(investor, product, req.amount, rejectionReason);
-            throw e; // Re-throw to inform frontend
-
-        } catch (InsufficientBalanceException e) {
-            // Save rejected withdrawal for audit trail
-            rejectionReason = e.getMessage();
-            saveRejectedWithdrawal(investor, product, req.amount, rejectionReason);
-            throw e; // Re-throw to inform frontend
+        List<String> validationErrors = validator.validateAll(investor, product, req.amount);
+        if (!validationErrors.isEmpty()) {
+            String rejectionReason = String.join("; ", validationErrors);
+            Withdrawal saved = saveRejectedWithdrawal(investor, product, req.amount, rejectionReason);
+            return toResponse(saved, product.getBalance());
         }
+
+        // Update product balance by subtracting withdrawal amount
+        product.setBalance(product.getBalance().subtract(req.amount));
+        productRepo.save(product);
+
+        // Create and save withdrawal record as APPROVED
+        Withdrawal w = new Withdrawal();
+        w.setInvestor(investor);
+        w.setProduct(product);
+        w.setAmount(req.amount);
+        w.setStatus("APPROVED");
+        Withdrawal saved = withdrawalRepo.save(w);
+
+        return toResponse(saved, product.getBalance());
     }
 
     /**
@@ -102,7 +77,7 @@ public class WithdrawalService {
      * @param amount The withdrawal amount requested
      * @param reason The reason for rejection
      */
-    private void saveRejectedWithdrawal(Investor investor, Product product, 
+    private Withdrawal saveRejectedWithdrawal(Investor investor, Product product, 
                                         java.math.BigDecimal amount, String reason) {
         Withdrawal w = new Withdrawal();
         w.setInvestor(investor);
@@ -110,7 +85,21 @@ public class WithdrawalService {
         w.setAmount(amount);
         w.setStatus("REJECTED");
         w.setRejectionReason(reason);
-        withdrawalRepo.save(w);
+        return withdrawalRepo.save(w);
+    }
+
+    private WithdrawalResponseDTO toResponse(Withdrawal withdrawal, java.math.BigDecimal remainingBalance) {
+        WithdrawalResponseDTO out = new WithdrawalResponseDTO();
+        out.id = withdrawal.getId();
+        out.investorId = withdrawal.getInvestor().getId();
+        out.productId = withdrawal.getProduct().getId();
+        out.productName = withdrawal.getProduct().getName();
+        out.amount = withdrawal.getAmount();
+        out.remainingBalance = remainingBalance;
+        out.createdAt = withdrawal.getCreatedAt();
+        out.status = withdrawal.getStatus();
+        out.rejectionReason = withdrawal.getRejectionReason();
+        return out;
     }
 
     /**

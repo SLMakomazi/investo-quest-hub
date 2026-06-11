@@ -16,4 +16,6 @@ public class WithdrawalResponseDTO {
     public BigDecimal amount;
     public BigDecimal remainingBalance;  // Balance after withdrawal
     public LocalDateTime createdAt;
+    public String status;
+    public String rejectionReason;
 }
