@@ -51,7 +51,7 @@ public class WithdrawalController {
     /**
      * Export withdrawal history as CSV file.
      * Generates a CSV download with withdrawal details for the specified investor.
-     * Includes status for audit trail purposes.
+     * Includes status and rejection reason for audit trail purposes.
      * @param investorId The investor ID to filter withdrawals
      * @param response HTTP response for CSV file download
      */
@@ -62,16 +62,17 @@ public class WithdrawalController {
         response.setHeader("Content-Disposition",
             "attachment; filename=\"withdrawals-" + investorId + ".csv\"");
         
-        // Write CSV header with status column
+        // Write CSV header with status and rejection reason columns
         PrintWriter w = response.getWriter();
-        w.println("id,createdAt,productId,productName,amount,status");
+        w.println("id,createdAt,productId,productName,amount,status,rejectionReason");
         
-        // Write withdrawal data rows including status
+        // Write withdrawal data rows including status and rejection reason
         for (Withdrawal x : service.history(investorId)) {
-            w.printf("%d,%s,%d,%s,%s,%s%n",
+            w.printf("%d,%s,%d,%s,%s,%s,%s%n",
                 x.getId(), x.getCreatedAt(),
                 x.getProduct().getId(), x.getProduct().getName(),
-                x.getAmount(), x.getStatus());
+                x.getAmount(), x.getStatus(), 
+                x.getRejectionReason() != null ? x.getRejectionReason() : "");
         }
         w.flush();
     }

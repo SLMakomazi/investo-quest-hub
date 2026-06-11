@@ -2,8 +2,9 @@ import './WithdrawalTable.css';
 
 /**
  * Table component for displaying withdrawal history.
- * Shows date, product name, product type, withdrawal amount, and status.
+ * Shows date, product name, product type, withdrawal amount, status, and rejection reason.
  * Includes status badge for audit trail visualization.
+ * Displays rejection reason for failed withdrawal attempts.
  */
 export default function WithdrawalTable({ items }) {
   if (!items?.length) return <p>No withdrawals yet.</p>;
@@ -29,7 +30,7 @@ export default function WithdrawalTable({ items }) {
     <table className="withdrawal-table">
       <thead>
         <tr>
-          <th>Date</th><th>Product</th><th>Type</th><th>Amount (ZAR)</th><th>Status</th>
+          <th>Date</th><th>Product</th><th>Type</th><th>Amount (ZAR)</th><th>Status</th><th>Reason</th>
         </tr>
       </thead>
       <tbody>
@@ -40,6 +41,9 @@ export default function WithdrawalTable({ items }) {
             <td>{w.product?.type}</td>
             <td>R {Number(w.amount).toLocaleString()}</td>
             <td>{getStatusBadge(w.status || 'APPROVED')}</td>
+            <td className="rejection-reason">
+              {w.status === 'REJECTED' && w.rejectionReason ? w.rejectionReason : '-'}
+            </td>
           </tr>
         ))}
       </tbody>

@@ -26,8 +26,12 @@ export default function History({ currentInvestorId }) {
       item.product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.amount.toString().includes(searchTerm);
     
-    // Since all successful withdrawals are stored, we treat all as "approved"
-    const matchesFilter = filterStatus === 'all' || filterStatus === 'approved';
+    // Filter by status (approved, rejected, or all)
+    const itemStatus = item.status || 'APPROVED';
+    const matchesFilter = filterStatus === 'all' || 
+      (filterStatus === 'approved' && itemStatus === 'APPROVED') ||
+      (filterStatus === 'rejected' && itemStatus === 'REJECTED') ||
+      (filterStatus === 'pending' && itemStatus === 'PENDING');
     
     return matchesSearch && matchesFilter;
   });

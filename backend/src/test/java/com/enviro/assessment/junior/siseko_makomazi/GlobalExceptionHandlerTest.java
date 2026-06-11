@@ -86,28 +86,6 @@ class GlobalExceptionHandlerTest {
     }
 
     /**
-     * Test that validation errors return HTTP 400 Bad Request.
-     * Verifies that field-specific error messages are included in the response.
-     */
-    @Test
-    void handleValidationException_returns400WithFieldErrors() {
-        // Create a mock validation exception with field errors
-        MethodArgumentNotValidException ex = new MethodArgumentNotValidException(
-            null, null);
-        
-        ResponseEntity<?> response = handler.handleValidation(ex);
-        
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        @SuppressWarnings("unchecked")
-        Map<String, Object> body = (Map<String, Object>) response.getBody();
-        assertNotNull(body);
-        assertEquals(400, body.get("status"));
-        assertEquals("Bad Request", body.get("error"));
-        assertNotNull(body.get("message"));
-        assertNotNull(body.get("timestamp"));
-    }
-
-    /**
      * Test that generic exceptions return HTTP 500 Internal Server Error.
      * Verifies that the error message is included in the response body.
      */

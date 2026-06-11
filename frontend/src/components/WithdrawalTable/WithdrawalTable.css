@@ -13,3 +13,12 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
+
+/* Rejection Reason Styling */
+.rejection-reason {
+  color: #c62828;
+  font-size: 0.85rem;
+  font-style: italic;
+  max-width: 300px;
+  word-wrap: break-word;
+}

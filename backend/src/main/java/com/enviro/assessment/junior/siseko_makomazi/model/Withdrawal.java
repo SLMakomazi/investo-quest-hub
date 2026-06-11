@@ -34,6 +34,9 @@ public class Withdrawal {
     // Default is APPROVED since only successful withdrawals are saved
     private String status = "APPROVED";
 
+    // Reason for rejection (only populated when status is REJECTED)
+    private String rejectionReason;
+
     // Getters and setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -52,4 +55,7 @@ public class Withdrawal {
     
     public String getStatus() { return status; }
     public void setStatus(String s) { this.status = s; }
+    
+    public String getRejectionReason() { return rejectionReason; }
+    public void setRejectionReason(String r) { this.rejectionReason = r; }
 }
