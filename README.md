@@ -4,9 +4,11 @@ eTalente Junior Full-Stack Assessment - Spring Boot + React
 
 ## Project Structure
 
-enviro365-assessment/
+investo-quest-hub/
 - backend/      - Spring Boot 3 (Java 17), H2 in-memory DB
 - frontend/     - React 18 + Vite
+- prometheus/   - Prometheus monitoring configuration
+- grafana/      - Pre-built Grafana dashboard export
 - database/     - Optional PostgreSQL schema + sample data
 - README.md     - This file
 
@@ -15,6 +17,8 @@ enviro365-assessment/
 - Java 17
 - Maven
 - Node.js and npm
+- Prometheus installed locally (add to environment variable path)
+- Grafana installed locally
 
 ## How to Run
 
@@ -33,6 +37,126 @@ npm install
 npm run dev
 
 Frontend runs on http://localhost:5173
+
+### Prometheus
+
+Start Prometheus locally and ensure it is scraping your backend metrics endpoint.
+
+Typical config target:
+
+http://localhost:8080/actuator/prometheus
+
+Prometheus runs on:
+http://localhost:9090
+
+### Grafana Setup (Monitoring Dashboard)
+
+Grafana is used to visualize system metrics collected via Prometheus.
+
+**Location:**
+grafana/dashboard.json
+
+**Setup:**
+1. Install Grafana locally
+2. Start Grafana (http://localhost:3000)
+3. Go to Dashboards → Import
+4. Upload grafana/dashboard.json
+5. Select Prometheus as datasource
+6. Click Import
+
+**Step 1: Start Grafana**
+
+Open Grafana in your browser:
+http://localhost:3000
+
+Default login:
+Username: admin
+Password: admin
+
+**Step 2: Add Prometheus Data Source**
+
+Main Menu Button → Go to Connections → Data Sources
+1. Select Prometheus
+2. Set URL:
+http://localhost:9090
+3. Click Save & Test
+
+**Step 3: Import Dashboard**
+
+Go to Dashboards → + button → Import Dashboard
+1. Upload file from repo: grafana/dashboard.json
+2. Select Prometheus as data source
+3. Click Import
+
+---
+
+## Startup Scripts
+
+The repository now includes automation scripts for easy development setup.
+
+### start_all.bat
+
+This script starts all required services in the correct order:
+
+**What it does:**
+- Starts backend (Spring Boot) on port 8080
+- Waits 10 seconds for backend initialization
+- Starts frontend (React) on port 5173
+- Waits 5 seconds for frontend initialization
+- Starts Prometheus on port 9090
+- Displays all service URLs
+
+**How to use:**
+```bash
+start_all.bat
+```
+
+**Services started:**
+- Backend: http://localhost:8080
+- Frontend: http://localhost:5173
+- Prometheus: http://localhost:9090
+- Actuator: http://localhost:8080/actuator
+- Metrics: http://localhost:8080/actuator/prometheus
+
+### generate-traffic.ps1
+
+This PowerShell script simulates realistic API traffic for monitoring purposes.
+
+**What it does:**
+- Continuously generates API requests to all backend endpoints
+- Randomizes investor IDs, product IDs, and withdrawal amounts
+- Tests both read operations (GET) and write operations (POST)
+- Includes occasional invalid IDs to test error handling
+- Throttles requests to prevent overwhelming the backend
+- Displays real-time request results in the console
+
+**Why randomization exists:**
+- Simulates realistic user behavior
+- Tests various scenarios (valid and invalid requests)
+- Generates diverse metrics for Grafana visualization
+- Helps identify performance issues under different load patterns
+
+**How throttling works:**
+- Script pauses for 1.2 seconds between request cycles
+- Prevents overwhelming the backend with too many requests
+- Creates smooth, readable Grafana charts
+- Allows backend to process requests at a sustainable rate
+
+**Endpoints hit:**
+- GET /api/investors/{id} - Investor retrieval
+- GET /api/portfolios/investor/{investorId} - Portfolio retrieval
+- GET /api/withdrawals/investor/{investorId} - Withdrawal history
+- GET /api/withdrawals/export?investorId={id} - CSV export (heavy endpoint)
+- POST /api/withdrawals - Withdrawal submission (write load)
+
+**How to use:**
+```powershell
+powershell -ExecutionPolicy Bypass -File generate-traffic.ps1
+```
+
+Press CTRL + C to stop the traffic generator.
+
+---
 
 ## API Endpoints
 
@@ -221,6 +345,9 @@ This runs:
 3. Input validation - Jakarta Bean Validation annotations
 4. Unit tests - WithdrawalValidatorTest with JUnit 5
 5. UI validation - Client-side validation in WithdrawalForm component
+
+## Bonus Implementation
+Implemented Prometheus for scraping metrics and Grafana Visualization 
 
 ## How to Change Investor Profiles
 
